@@ -19,11 +19,16 @@ public class BankingController {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final BeneficiaryRepository beneficiaryRepository;
 
-    public BankingController(UserRepository userRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) {
+    public BankingController(UserRepository userRepository, 
+                             AccountRepository accountRepository, 
+                             TransactionRepository transactionRepository, 
+                             BeneficiaryRepository beneficiaryRepository) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.beneficiaryRepository = beneficiaryRepository;
     }
 
     private User getAuthenticatedUser() {
@@ -93,5 +98,25 @@ public class BankingController {
 
         List<Transaction> transactions = transactionRepository.findByAccountId(account.getId());
         return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/beneficiaries")
+    public ResponseEntity<?> getBeneficiaries() {
+        User user = getAuthenticatedUser();
+        List<Beneficiary> beneficiaries = beneficiaryRepository.findByUserId(user.getId());
+        return ResponseEntity.ok(beneficiaries);
+    }
+
+    @PostMapping("/beneficiaries")
+    public ResponseEntity<?> addBeneficiary(@RequestBody Beneficiary beneficiary) {
+        User user = getAuthenticatedUser();
+        
+        // Verify target account exists
+        accountRepository.findByAccountNumber(beneficiary.getAccountNumber())
+                .orElseThrow(() -> new RuntimeException("Target account number does not exist."));
+
+        beneficiary.setUser(user);
+        Beneficiary saved = beneficiaryRepository.save(beneficiary);
+        return ResponseEntity.ok(saved);
     }
 }
