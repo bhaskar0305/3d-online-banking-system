@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Login from './pages/Login';
+import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 
 function App() {
@@ -13,11 +13,11 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div>
       {isAuthenticated ? (
         <Dashboard onLogout={handleLogout} />
       ) : (
-        <Login onLoginSuccess={() => setIsAuthenticated(true)} />
+        <LandingPage onLoginSuccess={() => setIsAuthenticated(true)} />
       )}
     </div>
   );
