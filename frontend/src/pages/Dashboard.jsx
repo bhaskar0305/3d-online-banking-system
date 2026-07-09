@@ -1,12 +1,14 @@
+import { generatePdfStatement } from '../utils/pdfGenerator';
+import { Download } from 'lucide-react';
 import React, { useEffect, useState, useCallback } from 'react';
 import { getAccount, getTransactions, transferMoney } from '../services/api';
 import axios from 'axios';
 import Card3D from '../components/Card3D';
 import ChatBot from '../components/ChatBot';
 import AdminPortal from './AdminPortal';
-import { 
-  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw, 
-  LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X 
+import {
+  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw,
+  LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X
 } from 'lucide-react';
 
 export default function Dashboard({ onLogout }) {
@@ -130,7 +132,7 @@ export default function Dashboard({ onLogout }) {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
-      
+
       {/* Header & Tabs Navigation */}
       <header className="bg-slate-800 border-b border-slate-700 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -147,7 +149,7 @@ export default function Dashboard({ onLogout }) {
               <span>Session Secure (TLS 1.3)</span>
             </div>
 
-            <button 
+            <button
               onClick={() => setShowAdminPortal(true)}
               className="flex items-center gap-1.5 text-xs bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-3 py-2 rounded-xl transition"
             >
@@ -173,9 +175,8 @@ export default function Dashboard({ onLogout }) {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-5 py-3 text-xs font-bold transition border-b-2 ${
-                    activeTab === tab.id ? 'border-amber-400 text-amber-400 bg-slate-900/50' : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30'
-                  }`}
+                  className={`flex items-center gap-2 px-5 py-3 text-xs font-bold transition border-b-2 ${activeTab === tab.id ? 'border-amber-400 text-amber-400 bg-slate-900/50' : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30'
+                    }`}
                 >
                   <Icon className="w-4 h-4" /> {tab.label}
                 </button>
@@ -187,7 +188,7 @@ export default function Dashboard({ onLogout }) {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8">
-        
+
         {/* TAB 1: OVERVIEW */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -248,7 +249,7 @@ export default function Dashboard({ onLogout }) {
         {/* TAB 2: FUND TRANSFER WITH SAVED PAYEES & 2FA */}
         {activeTab === 'transfer' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
+
             {/* Left Column: Transfer Form */}
             <div className="lg:col-span-7 bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-2xl relative">
               <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
@@ -257,9 +258,8 @@ export default function Dashboard({ onLogout }) {
               <p className="text-xs text-slate-400 mb-6">Enter beneficiary details. High-value transfers require 2FA verification.</p>
 
               {message.text && (
-                <div className={`p-4 rounded-xl text-xs mb-6 border ${
-                  message.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                }`}>
+                <div className={`p-4 rounded-xl text-xs mb-6 border ${message.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                  }`}>
                   {message.text}
                 </div>
               )}
@@ -368,9 +368,8 @@ export default function Dashboard({ onLogout }) {
                   </div>
 
                   {payeeMessage.text && (
-                    <div className={`p-3 rounded-xl text-xs border ${
-                      payeeMessage.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                    }`}>
+                    <div className={`p-3 rounded-xl text-xs border ${payeeMessage.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                      }`}>
                       {payeeMessage.text}
                     </div>
                   )}
@@ -431,7 +430,7 @@ export default function Dashboard({ onLogout }) {
                   <p className="text-xs text-slate-400">
                     A security code has been generated. For testing, enter the OTP below:
                   </p>
-                  
+
                   <div className="bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono font-bold text-lg p-2 rounded-xl">
                     OTP: {generatedOtp}
                   </div>
@@ -475,6 +474,35 @@ export default function Dashboard({ onLogout }) {
         {/* TAB 3: TRANSACTION STATEMENT */}
         {activeTab === 'history' && (
           <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h2 className="text-lg font-bold text-white">Full Statement & Audit Logs</h2>
+                <p className="text-xs text-slate-400">Complete record of deposits, debits, and transfers</p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* PDF Download Button */}
+                <button
+                  onClick={() => generatePdfStatement(account, transactions)}
+                  className="flex items-center gap-1.5 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold px-3.5 py-2 rounded-xl transition"
+                >
+                  <Download className="w-4 h-4" /> Export PDF Statement
+                </button>
+
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <input
+                    type="text"
+                    placeholder="Search statement..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
                 <h2 className="text-lg font-bold text-white">Full Statement & Audit Logs</h2>
@@ -505,7 +533,7 @@ export default function Dashboard({ onLogout }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700/50">
-                  {transactions.filter(tx => 
+                  {transactions.filter(tx =>
                     tx.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     tx.transactionId?.toLowerCase().includes(searchQuery.toLowerCase())
                   ).map((tx) => {
@@ -516,9 +544,8 @@ export default function Dashboard({ onLogout }) {
                         <td className="p-3 text-slate-300">{new Date(tx.timestamp).toLocaleString()}</td>
                         <td className="p-3 font-semibold text-white">{tx.description || 'N/A'}</td>
                         <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            isOutgoing ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'
-                          }`}>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${isOutgoing ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'
+                            }`}>
                             {isOutgoing ? 'DEBIT' : 'CREDIT'}
                           </span>
                         </td>
@@ -571,7 +598,11 @@ export default function Dashboard({ onLogout }) {
         © 2026 APEX Banking Corporation. Encrypted Session Active.
       </footer>
 
-      <ChatBot balance={account?.balance} accountNumber={account?.accountNumber} />
+      <ChatBot
+        account={account}
+        transactions={transactions}
+        onNavigateTab={(tab) => setActiveTab(tab)}
+      />
     </div>
   );
 }
