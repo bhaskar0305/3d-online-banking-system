@@ -1,15 +1,16 @@
-import { generatePdfStatement } from '../utils/pdfGenerator';
-import { Download } from 'lucide-react';
 import React, { useEffect, useState, useCallback } from 'react';
-import { getAccount, getTransactions, transferMoney } from '../services/api';
 import axios from 'axios';
+import { 
+  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw, 
+  LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X,
+  ShieldAlert, Download 
+} from 'lucide-react';
+
+import { getAccount, getTransactions, transferMoney } from '../services/api';
+import { generatePdfStatement } from '../utils/pdfGenerator';
 import Card3D from '../components/Card3D';
 import ChatBot from '../components/ChatBot';
 import AdminPortal from './AdminPortal';
-import {
-  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw,
-  LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X
-} from 'lucide-react';
 
 export default function Dashboard({ onLogout }) {
   const [activeTab, setActiveTab] = useState('overview');

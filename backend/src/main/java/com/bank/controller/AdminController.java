@@ -7,7 +7,6 @@ import com.bank.repository.AccountRepository;
 import com.bank.repository.TransactionRepository;
 import com.bank.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
