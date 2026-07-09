@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { 
-  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw, 
+import {
+  Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw,
   LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X,
-  ShieldAlert, Download 
+  ShieldAlert, Download
 } from 'lucide-react';
 
 import { getAccount, getTransactions, transferMoney } from '../services/api';
@@ -199,7 +199,17 @@ export default function Dashboard({ onLogout }) {
                   <span className="text-xs uppercase font-bold text-amber-400 tracking-wider">Primary Payment Card</span>
                   <span className="text-[10px] text-slate-400 bg-slate-900 px-2 py-1 rounded">3D Interactive</span>
                 </div>
-                <Card3D cardNumber={account?.accountNumber} name={account?.ownerName} balance={account?.balance} />
+
+                <Card3D
+                  cardNumber={account?.accountNumber}
+                  name={account?.ownerName}
+                  balance={account?.balance}
+                  expiryDate={account?.expiryDate}
+                  cvv={account?.cvv}
+                  userPin={account?.cardPin}
+                  isSample={false}
+                />
+
               </div>
 
               <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">

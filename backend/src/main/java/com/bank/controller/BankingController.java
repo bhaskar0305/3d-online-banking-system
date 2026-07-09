@@ -47,7 +47,10 @@ public class BankingController {
                 account.getAccountNumber(),
                 account.getAccountType(),
                 account.getBalance(),
-                user.getFullName()
+                user.getFullName(),
+                account.getCardPin(),
+                account.getExpiryDate(),
+                account.getCvv()
         ));
     }
 

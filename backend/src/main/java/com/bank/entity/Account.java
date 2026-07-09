@@ -14,7 +14,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "account_number", nullable = false, unique = true, length = 20)
+    @Column(name = "account_number", nullable = false, unique = true, length = 10)
     private String accountNumber;
 
     @Column(name = "account_type", nullable = false, length = 20)
@@ -25,6 +25,15 @@ public class Account {
 
     @Column(nullable = false, length = 20)
     private String status = "ACTIVE";
+
+    @Column(name = "card_pin", length = 4)
+    private String cardPin = "1234";
+
+    @Column(name = "expiry_date", length = 5)
+    private String expiryDate = "08/29";
+
+    @Column(name = "cvv", length = 3)
+    private String cvv = "892";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

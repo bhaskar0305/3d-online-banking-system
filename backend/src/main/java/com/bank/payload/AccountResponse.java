@@ -7,8 +7,11 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class AccountResponse {
-    private String accountNumebr;
+    private String accountNumber;
     private String accountType;
     private BigDecimal balance;
     private String ownerName;
+    private String cardPin;
+    private String expiryDate;
+    private String cvv;
 }

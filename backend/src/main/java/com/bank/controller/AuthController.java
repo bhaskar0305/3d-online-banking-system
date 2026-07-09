@@ -47,6 +47,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Error: Email is already in use!");
         }
 
+        // 1. Create and Save New User Entity
         User user = new User();
         user.setUsername(registerDto.getUsername());
         user.setEmail(registerDto.getEmail());
@@ -55,20 +56,30 @@ public class AuthController {
         user.setPhoneNumber(registerDto.getPhoneNumber());
 
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+                .orElseThrow(() -> new RuntimeException("Error: Default User Role not found in database."));
         user.setRoles(Collections.singleton(userRole));
 
         User savedUser = userRepository.save(user);
 
-        // Auto-generate Bank Account for the new user
+        // 2. Auto-Generate Associated Bank Account with 10-Digit Number & Card Security Attributes
         Account account = new Account();
-        account.setAccountNumber("100" + (10000000 + new Random().nextInt(90000000)));
-        account.setBalance(new BigDecimal("1000.00")); // Initial free deposit
+        
+        // Standardized 10-Digit Account Number starting with 100
+        account.setAccountNumber("100" + String.format("%07d", new Random().nextInt(10000000)));
+        account.setBalance(new BigDecimal("1000.00")); // Initial balance credit
         account.setAccountType("SAVINGS");
+        account.setStatus("ACTIVE");
+        
+        // Set User Security PIN, Expiry, and CVV
+        account.setCardPin(registerDto.getCardPin() != null && registerDto.getCardPin().length() == 4 
+                ? registerDto.getCardPin() : "1234");
+        account.setExpiryDate("08/29");
+        account.setCvv(String.format("%03d", new Random().nextInt(1000)));
         account.setUser(savedUser);
+
         accountRepository.save(account);
 
-        return ResponseEntity.ok("User registered successfully! Account created.");
+        return ResponseEntity.ok("User registered successfully! Primary bank account generated.");
     }
 
     @PostMapping("/login")
