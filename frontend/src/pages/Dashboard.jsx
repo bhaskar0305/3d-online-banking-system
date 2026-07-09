@@ -3,6 +3,7 @@ import { getAccount, getTransactions, transferMoney } from '../services/api';
 import axios from 'axios';
 import Card3D from '../components/Card3D';
 import ChatBot from '../components/ChatBot';
+import AdminPortal from './AdminPortal';
 import { 
   Send, ArrowUpRight, ArrowDownLeft, LogOut, ShieldCheck, RefreshCw, 
   LayoutDashboard, History, User, Lock, ChevronRight, Search, Users, Plus, KeyRound, X 
@@ -16,6 +17,7 @@ export default function Dashboard({ onLogout }) {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAdminPortal, setShowAdminPortal] = useState(false);
 
   // Beneficiary / Payee States
   const [beneficiaries, setBeneficiaries] = useState([]);
@@ -122,6 +124,10 @@ export default function Dashboard({ onLogout }) {
     }
   };
 
+  if (showAdminPortal) {
+    return <AdminPortal onBackToDashboard={() => setShowAdminPortal(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
       
@@ -140,6 +146,14 @@ export default function Dashboard({ onLogout }) {
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span>Session Secure (TLS 1.3)</span>
             </div>
+
+            <button 
+              onClick={() => setShowAdminPortal(true)}
+              className="flex items-center gap-1.5 text-xs bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-3 py-2 rounded-xl transition"
+            >
+              <ShieldAlert className="w-4 h-4" /> Admin Command Center
+            </button>
+
             <button onClick={onLogout} className="flex items-center gap-2 text-xs bg-slate-700 hover:bg-slate-600 px-3.5 py-2 rounded-xl text-slate-200 transition">
               <LogOut className="w-4 h-4" /> Sign Out
             </button>
